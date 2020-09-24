@@ -63,27 +63,12 @@ let rec check_exp env (pos, (exp, tref)) =
   | A.RealExp _ -> set tref T.REAL
   | A.StringExp _ -> set tref T.STRING
   | A.LetExp (decs, body) -> check_exp_let env pos tref decs body
-  | A.VarExp var -> check_var env tref pos var 
-  | A.AssignExp (var,exp) -> check_assign env tref pos var
+  | A.VarExp v -> set tref (check_var env v)
+  | A.AssignExp (var, exp) ->
+      compatible (check_exp env exp) (check_var env var) pos;
+      set tref T.VOID
   | _ -> Error.fatal "unimplemented"
 
-and check_assign env tref pos var =
-  let tvar = check_var env var tref in
-  let texp = check_exp env exp in
-  compatible tv te pos
-
-
-
-and check_var env tref pos v = 
-  match v with
-  | A.SimpleVar id -> check_exp_var 
-  | _ -> Error.fatal "unimplemented"
-
-
-and check_exp_var t =
-  let t = varlook env.venv id pos in
-  set tref t
-  
 and check_exp_let env pos tref decs body =
   let env' = List.fold_left check_dec env decs in
   let tbody = check_exp env' body in
@@ -108,6 +93,11 @@ and check_dec_var env pos ((name, type_opt, init), tref) =
 and check_dec env (pos, dec) =
   match dec with
   | A.VarDec x -> check_dec_var env pos x
+  | _ -> Error.fatal "unimplemented"
+
+and check_var env (pos, var) =
+  match var with
+  | A.SimpleVar v -> varlook env.venv v pos
   | _ -> Error.fatal "unimplemented"
 
 let semantic program =

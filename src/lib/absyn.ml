@@ -20,7 +20,7 @@ and exp_basic =
   | IfExp         of (lexp * lexp * lexp option)
   | WhileExp      of (lexp * lexp)
   | BreakExp
-  | ExpSeq        of lexp list
+  | SeqExp        of lexp list
   | CallExp       of symbol * lexp list
   | VarExp        of lvar
   | LetExp        of ldec list * lexp
