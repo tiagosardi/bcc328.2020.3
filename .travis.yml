@@ -1,5 +1,8 @@
-language: c
-compiler: clang
+language: minimal
+
+os: linux
+
+dist: focal
 
 cache:
   directories:
@@ -12,8 +15,6 @@ notifications:
   email: false
 
 before_install:
-  - apt search llvm
-  - clang --version
   - opam init -y --compiler=4.10.1
   - eval `opam config env`
   - opam install -y dune ocamlfind menhir camomile ppx_import ppx_deriving ppx_expect llvm
@@ -26,10 +27,9 @@ matrix:
       addons:
         apt:
           packages:
-            - llvm
+            - clang
+            - llvm-dev
             - cmake
             - m4
             - python2
             - opam
-      env:
-        - MATRIX_EVAL="CC=clang && CXX=clang++"
