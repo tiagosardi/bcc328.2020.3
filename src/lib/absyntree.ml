@@ -80,6 +80,7 @@ and tree_of_exp_basic exp =
   | VarExp x                  -> mktr "VarExp" [tree_of_lvar x]
   | LetExp (d, e)             -> mktr "LetExp" [mktr "Decs" (List.map tree_of_ldec d); tree_of_lexp e]
   | AssignExp (x, e)          -> mktr "AssignExp" [tree_of_lvar x; tree_of_lexp e]
+  | CondExp (t,b,c)           -> mktr "CondExp" [List.map tree_of_lexp t; tree_of_lexp b; tree_of_lexp c]
 
 and tree_of_var var =
   match var with

@@ -45,6 +45,9 @@
 %token                 WHILE
 %token                 UMINUS
 %token                 FUNCTION
+%token                 COND
+%token                 WHEN
+%token                 OTHERWISE
 
 %right                 OR
 %right                 AND
@@ -89,6 +92,7 @@ exp:
 | x=var                                        {$loc % VarExp x}
 | LET d=list(dec) IN e=exp                     {$loc % LetExp (d, e)}
 | x=var ASSIGN e=exp                           {$loc % AssignExp (x, e)}
+| COND WHEN t=list(exp) -> b=exp OTHERWISE c=exp     {$loc % CondExp (t,b,c)}
 
 (* semicolon separated sequence of expressions *)
 exp_seq:

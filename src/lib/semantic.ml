@@ -129,6 +129,7 @@ let rec check_exp env (pos, (exp, tref)) =
   | A.IfExp (test, e1, e2) -> set tref (check_if_exp env pos test e1 e2)
   | A.WhileExp (test, body) -> set tref (check_while_exp env pos test body)
   | A.BreakExp -> set tref (check_break_exp env pos)
+  | A.CondExp (test,e1,e2) -> set tref (check_cond_exp env pos test e1 e2)
   | _ -> Error.fatal "unimplemented"
 
 and check_let_exp env _pos decs body =
@@ -192,6 +193,16 @@ and check_if_exp env pos test e1 e2opt =
      compatible2 t1 (check_exp env e2) pos
   | None ->
      T.VOID
+
+and check_cond_exp env pos test e1 e2 =
+  check_bool (check_exp env test) (loc test);
+  let env2 = List.fold_left check_dec env test in
+  check_exp env2 e1
+  match test with
+  | some e2 ->
+    compatible check_exp env e1 
+  | _ -> Error.fatal "unimplemented"
+
 
 and check_while_exp env _pos test body =
   check_bool (check_exp env test) (loc test);

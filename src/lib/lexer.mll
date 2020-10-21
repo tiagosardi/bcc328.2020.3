@@ -73,6 +73,9 @@ rule token = parse
   | "then"            { THEN }
   | "var"             { VAR }
   | "while"           { WHILE }
+  | "cond"            {COND}
+  | "when"            {WHEN}
+  | "otherwise"       {OTHERWISE}
   | id as lxm         { ID (Symbol.symbol lxm) }
   | '"'               { stringRule lexbuf.L.lex_start_p "" lexbuf }
   | eof               { EOF }
